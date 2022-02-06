@@ -5,24 +5,6 @@ using UnityEngine;
 
 public class SceneManager : MonoBehaviour
 {
-    private static SceneManager _instance;
-
-    private ScoreKeeper _scoreKeeper;
-    private void Awake()
-    {
-        if (_instance != null)
-        {
-            gameObject.SetActive(false);
-            Destroy(gameObject);
-        }
-        else
-        {
-            DontDestroyOnLoad(gameObject);
-            _instance = this;
-            _scoreKeeper = FindObjectOfType<ScoreKeeper>();
-        }
-    }
-
     public void StartGame()
     {
         LoadScene(1);
@@ -30,19 +12,28 @@ public class SceneManager : MonoBehaviour
 
     public void Restart()
     {
-        _scoreKeeper.ResetScore();
+        ResetScore();
         StartGame();
     }
 
     public void ReloadGame()
     {
-        //LoadScene(1);
-        LoadScene(0);
+        LoadScene(1);
     }
 
     public void GoToMainMenu()
     {
+        ResetScore();
         LoadScene(0);
+    }
+
+    private void ResetScore()
+    {
+        var scoreKeeper = FindObjectOfType<ScoreKeeper>();
+        if (scoreKeeper != null)
+        {
+            scoreKeeper.ResetScore();
+        }
     }
 
     public void EndGame()
