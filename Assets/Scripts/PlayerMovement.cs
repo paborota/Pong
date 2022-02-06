@@ -7,16 +7,10 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private bool isPlayer;
-    [SerializeField] private float moveSpeed = 100.0f;
-
-    private Rigidbody2D _myRigidody;
-    private float _yVelocity;
-    private void Awake()
-    {
-        // Grab rigid body reference.
-        _myRigidody = GetComponent<Rigidbody2D>();
-    }
+    [SerializeField] private float moveSpeed = 5.0f;
     
+    private float _yVelocity;
+
     void Update()
     {
         Move();
@@ -29,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        var velocityToAdd = new Vector2(0.0f, _yVelocity);
-        _myRigidody.velocity = velocityToAdd * moveSpeed * Time.deltaTime;
+        var movementToAdd = new Vector2(0.0f, _yVelocity);
+        transform.position += (Vector3)(movementToAdd * moveSpeed * Time.deltaTime);
     }
 }

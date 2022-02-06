@@ -30,7 +30,7 @@ public class BallBehavior : MonoBehaviour
         _myRigidbody.velocity = Vector2.left * startingVelocity + Vector2.up * Random.Range(-0.5f, 0.5f);
     }
 
-    private void ChangeXDirection(ref Collision2D col)
+    private void OnPlayerCollision(ref Collision2D col)
     {
         // Only time this will be called is when the ball hits the player
         // so we should also increase speed.
@@ -38,14 +38,13 @@ public class BallBehavior : MonoBehaviour
         var horizontalVelocityMultiplier = -1.0f * speedUpOnPlayerHit;
         
         var yOffsetToPlayer = transform.position.y - col.transform.position.y;
-        var verticalVelocityMultiplier = (float)Math.Pow(3.0f * yOffsetToPlayer, 2.0f);
+        var verticalVelocity = (float)Math.Pow(2.0f * yOffsetToPlayer, 3.0f);
 
         var horizontalVelocity = myVelocity.x * horizontalVelocityMultiplier;
-        var verticalVelocity = myVelocity.y * verticalVelocityMultiplier;
         _myRigidbody.velocity = new Vector2(horizontalVelocity, verticalVelocity);
     }
 
-    private void ChangeYDirection()
+    private void OnWallCollision()
     {
         _myRigidbody.velocity *= new Vector2(1.0f, -1.0f);
     }
@@ -56,13 +55,13 @@ public class BallBehavior : MonoBehaviour
         {
             // col object is player, change X
             Debug.Log("Collided with player.");
-            ChangeXDirection(ref col);
+            OnPlayerCollision(ref col);
         }
         else
         {
             // col object not player, change Y
             Debug.Log("Collided with wall.");
-            ChangeYDirection();
+            OnWallCollision();
         }
     }
 }
