@@ -14,11 +14,13 @@ public class BallBehavior : MonoBehaviour
     private LayerMask _playerLayer;
 
     private GameObject _recentlyHitPlayer;
+    private SoundManager _soundManager;
     
     private void Awake()
     {
         _myRigidbody = GetComponent<Rigidbody2D>();
         _playerLayer = LayerMask.GetMask("Player");
+        _soundManager = FindObjectOfType<SoundManager>();
     }
 
     private void Start()
@@ -42,15 +44,20 @@ public class BallBehavior : MonoBehaviour
         var horizontalVelocityMultiplier = -1.0f * speedUpOnPlayerHit;
         
         var yOffsetToPlayer = transform.position.y - col.transform.position.y;
-        var verticalVelocity = (float)Math.Pow(2.0f * yOffsetToPlayer, 3.0f);
+        var verticalVelocity = (float)Math.Pow(yOffsetToPlayer, 3.0f) + yOffsetToPlayer;
 
         var horizontalVelocity = myVelocity.x * horizontalVelocityMultiplier;
         _myRigidbody.velocity = new Vector2(horizontalVelocity, verticalVelocity);
+
+        if (_soundManager == null) return;
+        _soundManager.PlayRacketHit();
     }
 
     private void OnWallCollision()
     {
         _myRigidbody.velocity *= new Vector2(1.0f, -1.0f);
+        if (_soundManager == null) return;
+        _soundManager.PlayWallHit();
     }
 
     private void OnCollisionEnter2D(Collision2D col)
