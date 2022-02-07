@@ -12,6 +12,8 @@ public class BallBehavior : MonoBehaviour
 
     private Rigidbody2D _myRigidbody;
     private LayerMask _playerLayer;
+
+    private GameObject _recentlyHitPlayer;
     
     private void Awake()
     {
@@ -21,6 +23,8 @@ public class BallBehavior : MonoBehaviour
 
     private void Start()
     {
+        Physics.IgnoreLayerCollision(6, 8);
+        
         StartCoroutine(StartMovement());
     }
 
@@ -53,6 +57,8 @@ public class BallBehavior : MonoBehaviour
     {
         if (((1 << col.gameObject.layer) & _playerLayer) != 0)
         {
+            if (_recentlyHitPlayer == col.gameObject) return;
+            _recentlyHitPlayer = col.gameObject;
             // col object is player, change X
             Debug.Log("Collided with player.");
             OnPlayerCollision(ref col);
